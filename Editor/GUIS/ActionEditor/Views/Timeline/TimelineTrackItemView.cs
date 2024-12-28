@@ -149,8 +149,9 @@ namespace NBC.ActionEditor
                 GUI.color = Color.white;
 
                 NBLayout.Space(2);
-
-                GUI.DrawTexture(NBLayout.GetHRect(20, 20), track.GetIcon()); // 绘制图标
+                var icon = track.GetIcon();
+                if (icon is not null)
+                    GUI.DrawTexture(NBLayout.GetHRect(20, 20), icon); // 绘制图标
             }
 
 
