@@ -7,7 +7,13 @@ namespace NBC.ActionEditor
     {
         public override void OnDraw()
         {
-            ShowTimeSlider();
+            // ShowTimeSlider();
+            var left = Styles.TimelineLeftWidth + Styles.RightGapWidth;
+            var rect = new Rect(Position.x + left, Position.y, Position.width - left, Position.height);
+            var sliderRect = new Rect(5, 0, rect.width - 10, 18);
+            GUILayout.BeginArea(rect);
+            App.TimeArea.HSliderGUI(sliderRect);
+            GUILayout.EndArea();
         }
 
         void ShowTimeSlider()

@@ -128,14 +128,9 @@ namespace NBC.ActionEditor
         {
             GUI.color = Color.white;
             var text = _clip.GetName();
-            var size = GUI.skin.label.CalcSize(new GUIContent(text))+Vector2.right;
-            if (ClipRect.width > size.x)
-            {
-                var showY = TrackRect.y + (ClipRect.height - Styles.ClipBottomRectHeight) * 0.5f - size.y * 0.5f;
-                var showX = StartPosX + ClipRect.width * 0.5f - size.x * 0.5f;
-                var stampRect = new Rect(showX, showY, size.x, size.y);
-                GUI.Box(stampRect, text, NameStyle);
-            }
+            var nameRect = new Rect(ClipRect.x + 5, ClipRect.y, ClipRect.width - 10, ClipRect.height);
+            Styles.ShadowLabel(nameRect, Styles.Elipsify(text, nameRect, Styles.ClipNameStyle),
+                Styles.ClipNameStyle, Color.white, Color.black);
         }
 
         protected virtual void DrawValid()

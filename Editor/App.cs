@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using System.Linq;
+using SimpleTimeArea.Editor;
 
 namespace NBC.ActionEditor
 {
@@ -18,6 +19,7 @@ namespace NBC.ActionEditor
         public static CallbackFunction OnInitialize;
         public static CallbackFunction OnDisable;
         public static OpenAssetFunction OnOpenAsset;
+        public static TimeArea TimeArea;
         
         public static Asset AssetData { get; private set; } = null;
 

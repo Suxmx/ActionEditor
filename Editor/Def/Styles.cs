@@ -54,10 +54,13 @@ namespace NBC.ActionEditor
         public static GUIStyle HeaderBoxStyle => _headerBoxStyle != null
             ? _headerBoxStyle
             : _headerBoxStyle = _styleSheet.GetStyle("HeaderBox");
+        
+        public static GUIStyle ClipNameStyle => EditorStyles.FromUSS("Font-Clip");
 
 
         public static GUIStyle WhiteBox => _styleSheet.GetStyle("WhiteBox");
         public static GUIStyle NotScrollbar => _styleSheet.GetStyle("NotScrollbar");
+        static readonly GUIContent s_TempContent = new GUIContent();
 
 
         // public static GUIStyle NotVerticalScrollbar { get; private set; }
@@ -146,6 +149,65 @@ namespace NBC.ActionEditor
 
 
             _timelineLeftWidth = EditorPrefs.GetFloat(PrefsConst.Width, 240);
+        }
+        
+        const string k_Elipsis = "…";
+        
+        public static string Elipsify(string label, Rect rect, GUIStyle style)
+        {
+            var ret = label;
+
+            if (label.Length == 0)
+                return ret;
+
+            s_TempContent.text = label;
+            float neededWidth = style.CalcSize(s_TempContent).x;
+
+            return Elipsify(label, rect.width, neededWidth);
+        }
+
+        public static string Elipsify(string label, float destinationWidth, float neededWidth)
+        {
+            var ret = label;
+
+            if (label.Length == 0)
+                return ret;
+
+            if (destinationWidth < neededWidth)
+            {
+                float averageWidthOfOneChar = neededWidth / label.Length;
+                int floor = Mathf.Max((int)Mathf.Floor(destinationWidth / averageWidthOfOneChar), 0);
+
+                if (floor < k_Elipsis.Length)
+                    ret = string.Empty;
+                else if (floor == k_Elipsis.Length)
+                    ret = k_Elipsis;
+                else if (floor < label.Length)
+                    ret = label.Substring(0, floor - k_Elipsis.Length) + k_Elipsis;
+            }
+
+            return ret;
+        }
+        public static void ShadowLabel(Rect rect, string text, GUIStyle style, Color textColor, Color shadowColor)
+        {
+            var content = new GUIContent();
+            content.text = text;
+            content.tooltip = string.Empty;
+            ShadowLabel(rect, content, style, textColor, shadowColor);
+        }
+
+        public static void ShadowLabel(Rect rect, GUIContent content, GUIStyle style, Color textColor, Color shadowColor)
+        {
+            var shadowRect = rect;
+            shadowRect.xMin += 2.0f;
+            shadowRect.yMin += 2.0f;
+            style.normal.textColor = shadowColor;
+            style.hover.textColor = shadowColor;
+            GUI.Label(shadowRect, content, style);
+
+            style.normal.textColor = textColor;
+            style.hover.textColor = textColor;
+            GUI.Label(rect, content, style);
         }
     }
 }

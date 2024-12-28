@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using TimeArea = SimpleTimeArea.Editor.TimeArea;
 
 namespace NBC.ActionEditor
 {
@@ -9,20 +10,20 @@ namespace NBC.ActionEditor
 
         private TimelineHeaderView _headerView;
         private TimelineMiddleView _middleView;
-        private TimelinePointerView _pointerView;
+        private MyTimelinePointerView _pointerView;
         private TimelineBottomView _bottomView;
-
         public Asset asset => App.AssetData;
 
         private Rect _pointerRect;
 
         protected override void OnInit()
         {
+            InitTimeArea();
             _splitterView = Window.CreateView<SplitterView>();
 
             _headerView = Window.CreateView<TimelineHeaderView>();
             _middleView = Window.CreateView<TimelineMiddleView>();
-            _pointerView = Window.CreateView<TimelinePointerView>();
+            _pointerView = Window.CreateView<MyTimelinePointerView>();
             _bottomView = Window.CreateView<TimelineBottomView>();
 
             Prefs.SnapInterval = 0.01f;
@@ -37,7 +38,17 @@ namespace NBC.ActionEditor
             _headerView.OnGUI(new Rect(0, 0, headRect.width, headRect.height));
             GUILayout.EndArea();
 
-
+            App.TimeArea.BeginViewGUI();
+            // if (App.TimeArea.SetShownHRange() >= 0)
+            // {
+            //     // asset.ViewTimeMin = min;
+            //     // asset.ViewTimeMax = max;
+            // }
+            // else if (min < 0 && asset.ViewTimeMin > 0)
+            // {
+            //     // asset.ViewTimeMin = 0;
+            //     // asset.ViewTimeMax = max + 0;
+            // }
             App.Width = Styles.TimelineRightWidth;
             DoZoomAndPan();
             ItemDragger.OnCheck();
@@ -50,6 +61,7 @@ namespace NBC.ActionEditor
             // _middleView.OnGUI(middleRect);
             _middleView.OnGUI(new Rect(middleRect.x, middleRect.y - Styles.PlayControlHeight, middleRect.width,
                 middleRect.height));
+            App.TimeArea.rect = new Rect(middleRect.x, middleRect.y, middleRect.width, middleRect.height);
             GUILayout.EndArea();
 
             //bottom
@@ -165,13 +177,13 @@ namespace NBC.ActionEditor
                     // var minTime = asset.PosToTime(4, App.Width) * -1;
                     if (min >= 0)
                     {
-                        asset.ViewTimeMin = min;
-                        asset.ViewTimeMax = max;
+                        // asset.ViewTimeMin = min;
+                        // asset.ViewTimeMax = max;
                     }
                     else if (min < 0 && asset.ViewTimeMin > 0)
                     {
-                        asset.ViewTimeMin = 0;
-                        asset.ViewTimeMax = max + 0;
+                        // asset.ViewTimeMin = 0;
+                        // asset.ViewTimeMax = max + 0;
                     }
 
                     _lastZoomX = e.mousePosition.x;
@@ -183,5 +195,21 @@ namespace NBC.ActionEditor
         }
 
         #endregion
+
+        private void InitTimeArea()
+        {
+            App.TimeArea = new TimeArea(false, true, false);
+            App.TimeArea.enableMouseInput = true;
+            App.TimeArea.hRangeLocked = false;
+            App.TimeArea.vRangeLocked = true;
+            App.TimeArea.hSlider = true;
+            App.TimeArea.vSlider = false;
+            App.TimeArea.margin = 10;
+            App.TimeArea.scaleWithWindow = true;
+            App.TimeArea.hTicks.SetTickModulosForFrameRate(60);
+            App.TimeArea.hRangeMin = 0;
+            App.TimeArea.hRangeMax = 20;
+            App.TimeArea.SetShownHRangeInsideMargins(0, 10); 
+        }
     }
 }
