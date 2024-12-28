@@ -118,10 +118,11 @@ namespace NBC.ActionEditor
             CustomizedDrawTools.Draw<HeaderGUI>();
             GUILayout.EndArea();
 
-
+            var originColor = GUI.color;
             GUI.color = Color.black.WithAlpha(0.2f);
             GUI.DrawTexture(new Rect(_headerRect.x, _headerRect.y + _headerRect.height, _headerRect.width, 1),
                 Styles.WhiteTexture);
+            GUI.color = originColor;
         }
 
         #endregion

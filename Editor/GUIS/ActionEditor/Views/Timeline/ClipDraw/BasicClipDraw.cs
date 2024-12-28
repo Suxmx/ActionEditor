@@ -128,7 +128,7 @@ namespace NBC.ActionEditor
         {
             GUI.color = Color.white;
             var text = _clip.GetName();
-            var size = GUI.skin.label.CalcSize(new GUIContent(text));
+            var size = GUI.skin.label.CalcSize(new GUIContent(text))+Vector2.right;
             if (ClipRect.width > size.x)
             {
                 var showY = TrackRect.y + (ClipRect.height - Styles.ClipBottomRectHeight) * 0.5f - size.y * 0.5f;
@@ -141,8 +141,10 @@ namespace NBC.ActionEditor
         protected virtual void DrawValid()
         {
             if (_clip.IsValid) return;
+            var origin = GUI.color;
             GUI.color = Color.red.WithAlpha(0.2f);
             GUI.DrawTexture(ClipRect, Styles.WhiteTexture);
+            GUI.color = origin;
         }
 
         #endregion

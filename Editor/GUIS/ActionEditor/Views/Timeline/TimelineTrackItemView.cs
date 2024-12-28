@@ -48,6 +48,12 @@ namespace NBC.ActionEditor
             }
 
             DrawLockedAndActive();
+            //Delete快捷键
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Delete && App.IsSelect(Data))
+            {
+                DeleteContextMenu();
+            }
         }
 
         #region Lock & Active
